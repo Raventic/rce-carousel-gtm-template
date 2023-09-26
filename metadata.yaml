@@ -1,3 +1,5 @@
 homepage: "https://www.raventic.com"
 documentation: "https://sdk.rvndn.com/rce/v1/doc/rvn-rce-gtm.en.pdf"
-versions: [ ]
+versions:
+  - sha: 5254bc412899776e25ed52af3ac3739316a7724d
+    changeNotes: Initial version
