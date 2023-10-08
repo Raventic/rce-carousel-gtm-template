@@ -3,3 +3,5 @@ documentation: "https://sdk.rvndn.com/rce/v1/doc/rvn-rce-gtm.en.pdf"
 versions:
   - sha: 5254bc412899776e25ed52af3ac3739316a7724d
     changeNotes: Initial version
+  - sha: 15470065ca80160912dc6de49bc03cd9e0d9db47
+    changeNotes: Fixed custom thumbnail sizes setting, template has logo
