@@ -370,7 +370,7 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "enablingConditions": [
           {
-            "paramName": "imagesCustomSize",
+            "paramName": "thumbnailCustomSize",
             "paramValue": true,
             "type": "EQUALS"
           }
@@ -389,7 +389,7 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "enablingConditions": [
           {
-            "paramName": "imagesCustomSize",
+            "paramName": "thumbnailCustomSize",
             "paramValue": true,
             "type": "EQUALS"
           }
