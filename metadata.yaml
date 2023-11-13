@@ -5,3 +5,5 @@ versions:
     changeNotes: Initial version
   - sha: 15470065ca80160912dc6de49bc03cd9e0d9db47
     changeNotes: Fixed custom thumbnail sizes setting, template has logo
+  - sha: 965f9f63d9ad563fb2437eea31100909d56f38f0
+    changeNotes: New favicon, more flexible carousel placement options
