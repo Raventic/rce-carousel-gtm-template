@@ -92,19 +92,92 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "help": "Service type you want to use in the carousel.",
         "alwaysInSummary": true
-      },
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "placement",
+    "displayName": "Carousel placement",
+    "groupStyle": "NO_ZIPPY",
+    "subParams": [
       {
         "type": "TEXT",
-        "name": "targetContainerId",
-        "displayName": "Container element ID",
+        "name": "targetContainerSelector",
+        "displayName": "Target element selector",
         "simpleValueType": true,
         "valueValidators": [
           {
             "type": "NON_EMPTY"
           }
         ],
-        "help": "ID if the HTML element where the carousel will be placed.",
+        "help": "CSS selector pointing to the target element",
         "alwaysInSummary": true
+      },
+      {
+        "type": "SELECT",
+        "name": "targetContainerMode",
+        "displayName": "Placement mode",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "inside",
+            "displayValue": "Inside target element"
+          },
+          {
+            "value": "before",
+            "displayValue": "Before target element"
+          },
+          {
+            "value": "after",
+            "displayValue": "After target element"
+          }
+        ],
+        "simpleValueType": true,
+        "help": "Decides if the carousel should be placed inside the target element, before or after it."
+      },
+      {
+        "type": "GROUP",
+        "name": "customElementConfig",
+        "displayName": "",
+        "groupStyle": "NO_ZIPPY",
+        "subParams": [
+          {
+            "type": "LABEL",
+            "name": "customContainerExplanation",
+            "displayName": "If you select placement mode \"before\" or \"after\" a new container \u0026lt;div\u0026gt; element will be created before/after the target element. This newly created \u0026lt;div\u0026gt; can have configurable ID, classes and inline styles to help you make the carousel fit into your site layout.\n\u003cbr\u003e\nAll these settings are optional."
+          },
+          {
+            "type": "TEXT",
+            "name": "defaultContainerId",
+            "displayName": "Container element ID",
+            "simpleValueType": true
+          },
+          {
+            "type": "TEXT",
+            "name": "defaultContainerClass",
+            "displayName": "Container element classes (separate with space)",
+            "simpleValueType": true
+          },
+          {
+            "type": "TEXT",
+            "name": "defaultContainerStyles",
+            "displayName": "Container element inline styles",
+            "simpleValueType": true
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "targetContainerMode",
+            "paramValue": "before",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "targetContainerMode",
+            "paramValue": "after",
+            "type": "EQUALS"
+          }
+        ]
       }
     ]
   },
@@ -437,7 +510,11 @@ const initWidget = () => {
       service: data.service
     },
     {
-      targetContainerId: data.targetContainerId,
+      targetContainerSelector: data.targetContainerSelector,
+      targetContainerMode: data.targetContainerMode,
+      defaultContainerId: data.defaultContainerId,
+      defaultContainerClass: data.defaultContainerClass,
+      defaultContainerStyles: data.defaultContainerStyles,
       locale: data.locale,
       title: data.title,
       resultsCount: data.resultsCount,
