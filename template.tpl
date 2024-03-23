@@ -473,6 +473,54 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueUnit": "px"
+      },
+      {
+        "type": "SELECT",
+        "name": "carouselSize",
+        "displayName": "Carousel size",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": "large",
+            "displayValue": "Large"
+          },
+          {
+            "value": "medium",
+            "displayValue": "Medium"
+          },
+          {
+            "value": "small",
+            "displayValue": "Small"
+          }
+        ],
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customTemplates",
+            "paramValue": false,
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "testing",
+    "displayName": "Testing",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "LABEL",
+        "name": "testingModeExplanation",
+        "displayName": "When testing mode is turned on, 50 % of your visitors will see the Recommendation Carousel and 50 % won\u0027t. Every time the Carosel tag is triggered, it will send an event called RaventicRCECarouselTest containing the information if the current visitor will see the carousel or not. You can use it to configure sending an event into your GA so that you are able to compare the performance of visitors who are seeing Recommendation carousels and those who aren\u0027t."
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "testingMode",
+        "checkboxText": "Testing mode",
+        "simpleValueType": true,
+        "alwaysInSummary": true
       }
     ]
   }
@@ -486,11 +534,16 @@ const createQueue = require('createQueue');
 const injectScript = require('injectScript');
 const makeInteger = require('makeInteger');
 const logToConsole = require('logToConsole');
+const getCookieValues = require('getCookieValues');
+const setCookie = require('setCookie');
+const generateRandom = require('generateRandom');
+const makeString = require('makeString');
 
 const initWidget = () => {
+  const dataLayerPush = createQueue('dataLayer');
+  
   let onProductClick;
   if (data.onProductClickDataLayer && data.onProductClickEventName) {
-    const dataLayerPush = createQueue('dataLayer');
     onProductClick = (event, product) => {
       dataLayerPush({
         event: data.onProductClickEventName,
@@ -502,6 +555,35 @@ const initWidget = () => {
       });
     };
   }
+
+  if (data.testingMode) {
+    const v = getCookieValues("_rvn_ab");
+    
+    let variant;
+    if (!v || v.length < 1) {
+      variant = makeString(generateRandom(0, 1));
+    } else {
+      variant = v[0];
+    }
+    
+    setCookie("_rvn_ab", variant, {
+      domain: "auto",
+      path: "/", 
+      "max-age": 365 * 86400
+    });
+    
+    dataLayerPush({
+      event: "RaventicRCECarouselTest",
+      raventic: {
+        raventic_variant: variant
+      },
+    });
+    
+    if (variant === "0") {
+      data.gtmOnSuccess();
+      return;
+    }
+  }
   
   callInWindow(
     data.mode === "production" ? "RaventicRCECarousel.draw" : "RaventicRCECarouselDevel.draw", 
@@ -510,6 +592,7 @@ const initWidget = () => {
       service: data.service
     },
     {
+      size: data.carouselSize,
       targetContainerSelector: data.targetContainerSelector,
       targetContainerMode: data.targetContainerMode,
       defaultContainerId: data.defaultContainerId,
@@ -732,6 +815,111 @@ ___WEB_PERMISSIONS___
           }
         }
       ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "set_cookies",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "allowedCookies",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "name"
+                  },
+                  {
+                    "type": 1,
+                    "string": "domain"
+                  },
+                  {
+                    "type": 1,
+                    "string": "path"
+                  },
+                  {
+                    "type": 1,
+                    "string": "secure"
+                  },
+                  {
+                    "type": 1,
+                    "string": "session"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "_rvn_ab"
+                  },
+                  {
+                    "type": 1,
+                    "string": "*"
+                  },
+                  {
+                    "type": 1,
+                    "string": "*"
+                  },
+                  {
+                    "type": 1,
+                    "string": "any"
+                  },
+                  {
+                    "type": 1,
+                    "string": "any"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "get_cookies",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "cookieAccess",
+          "value": {
+            "type": 1,
+            "string": "specific"
+          }
+        },
+        {
+          "key": "cookieNames",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "_rvn_ab"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
     },
     "isRequired": true
   }
