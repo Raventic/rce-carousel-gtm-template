@@ -248,42 +248,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "GROUP",
-    "name": "measuring",
-    "displayName": "Performance measuring",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
-      {
-        "type": "CHECKBOX",
-        "name": "onProductClickDataLayer",
-        "checkboxText": "Push an event to data layer when user clicks on a suggested product",
-        "simpleValueType": true,
-        "alwaysInSummary": true,
-        "defaultValue": true
-      },
-      {
-        "type": "TEXT",
-        "name": "onProductClickEventName",
-        "displayName": "Event name",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "onProductClickDataLayer",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "defaultValue": "RaventicRCECarouselClick",
-        "alwaysInSummary": true,
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
     "name": "visualPrice",
     "displayName": "Prices formatting",
     "groupStyle": "ZIPPY_CLOSED",
@@ -542,20 +506,6 @@ const makeString = require('makeString');
 const initWidget = () => {
   const dataLayerPush = createQueue('dataLayer');
   
-  let onProductClick;
-  if (data.onProductClickDataLayer && data.onProductClickEventName) {
-    onProductClick = (event, product) => {
-      dataLayerPush({
-        event: data.onProductClickEventName,
-        raventic: {
-          recommendations: {
-            clickedProduct: product,
-          },
-         },
-      });
-    };
-  }
-
   if (data.testingMode) {
     const v = getCookieValues("_rvn_ab");
     
@@ -617,9 +567,73 @@ const initWidget = () => {
       classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
     },
     data.productId,
-    onProductClick,
-    (stage, error) => logToConsole(stage, error),
-    undefined
+    (event, product, instanceId) => {
+      dataLayerPush({
+        event: "RaventicRCECarouselClick",
+        raventic: {
+          recommendations: {
+            instanceId: instanceId,
+            clickedProduct: product,
+          },
+         },
+      });
+    },
+    (stage, error, instanceId) => {
+      dataLayerPush({
+        event: "RaventicRCECarouselError",
+        raventic: {
+          recommendations: {
+            instanceId: instanceId,
+            error: {            
+              stage: stage,
+              error: error,
+            }
+          },
+         },
+      });
+      
+      logToConsole("Raventic Recommendation Carousel error:", stage, error);
+    },
+    (result, error, reference, instanceId) => {
+      const eventParams = {
+        instanceId: instanceId,
+        success: !error,
+        reference: reference,
+        products: {
+          requested: data.resultsCount,
+          returned: result && result.products ? result.products.length : null,
+        },
+      };
+      
+      if (error) {
+        eventParams.error = {
+          stage: "execute",
+          error: error,
+        };
+      } else {
+        eventParams.error = null;
+      }
+      
+      dataLayerPush({
+        event: "RaventicRCECarouselStart",
+        raventic: {
+          recommendations: eventParams,
+         },
+      });      
+    },
+    (visibleProductCount, instanceId) => {
+      dataLayerPush({
+        event: "RaventicRCECarouselImpression",
+        raventic: {
+          recommendations: {
+            instanceId: instanceId,
+            products: {
+              visible: visibleProductCount,
+            },
+          }
+         },
+      });
+    }
   );
   
   data.gtmOnSuccess();
