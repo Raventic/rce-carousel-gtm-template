@@ -9,3 +9,5 @@ versions:
     changeNotes: New favicon, more flexible carousel placement options
   - sha: 33eec04da865329dcbd790a1c72b60e25fcb0e20
     changeNotes: A/B testing support, carousel size setting
+  - sha: fa0ae68ff21758938b78e602d7e83ff611fa2b4c
+    changeNotes: Fixed name for click event, new events for start, impression and error states
