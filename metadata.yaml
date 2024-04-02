@@ -11,3 +11,5 @@ versions:
     changeNotes: A/B testing support, carousel size setting
   - sha: fa0ae68ff21758938b78e602d7e83ff611fa2b4c
     changeNotes: Fixed name for click event, new events for start, impression and error states
+  - sha: cf82e4a93eb6ea838bdd91ecd0e3bf80d9c51573
+    changeNotes: Internal Raventic events do not pollute GTM data layer
