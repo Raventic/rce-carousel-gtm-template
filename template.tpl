@@ -505,6 +505,7 @@ const makeString = require('makeString');
 
 const initWidget = () => {
   const dataLayerPush = createQueue('dataLayer');
+  const raventicLayerPush = createQueue('raventicLayer');
   
   if (data.testingMode) {
     const v = getCookieValues("_rvn_ab");
@@ -579,7 +580,9 @@ const initWidget = () => {
       });
     },
     (stage, error, instanceId) => {
-      dataLayerPush({
+      logToConsole("Raventic Recommendation Carousel error:", stage, error);
+      
+      raventicLayerPush({
         event: "RaventicRCECarouselError",
         raventic: {
           recommendations: {
@@ -591,38 +594,26 @@ const initWidget = () => {
           },
          },
       });
-      
-      logToConsole("Raventic Recommendation Carousel error:", stage, error);
     },
     (result, error, reference, instanceId) => {
-      const eventParams = {
-        instanceId: instanceId,
-        success: !error,
-        reference: reference,
-        products: {
-          requested: data.resultsCount,
-          returned: result && result.products ? result.products.length : null,
-        },
-      };
-      
-      if (error) {
-        eventParams.error = {
-          stage: "execute",
-          error: error,
-        };
-      } else {
-        eventParams.error = null;
-      }
-      
-      dataLayerPush({
+      raventicLayerPush({
         event: "RaventicRCECarouselStart",
         raventic: {
-          recommendations: eventParams,
+          recommendations: {
+            instanceId: instanceId,
+            success: !error,
+            reference: reference,
+            products: {
+              requested: data.resultsCount,
+              returned: result && result.products ? result.products.length : null,
+            },
+            error: error ? {stage: "execute", error: error} : null,
+          },
          },
       });      
     },
     (visibleProductCount, instanceId) => {
-      dataLayerPush({
+      raventicLayerPush({
         event: "RaventicRCECarouselImpression",
         raventic: {
           recommendations: {
@@ -775,6 +766,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "raventicLayer"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
                   }
                 ]
               }
