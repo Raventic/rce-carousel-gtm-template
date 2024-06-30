@@ -87,6 +87,10 @@ ___TEMPLATE_PARAMETERS___
           {
             "value": "visual-similarity",
             "displayValue": "Visual similarity"
+          },
+          {
+            "value": "cross-sell",
+            "displayValue": "Cross sell"
           }
         ],
         "simpleValueType": true,
@@ -487,6 +491,177 @@ ___TEMPLATE_PARAMETERS___
         "alwaysInSummary": true
       }
     ]
+  },
+  {
+    "type": "GROUP",
+    "name": "cart",
+    "displayName": "Cart support",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "cartType",
+        "displayName": "Add to cart request type",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "none",
+            "displayValue": "Adding to cart not supported"
+          },
+          {
+            "value": "AJAXURLCart",
+            "displayValue": "Generic AJAX call"
+          },
+          {
+            "value": "AJAXJSONCart",
+            "displayValue": "AJAX JSON call"
+          },
+          {
+            "value": "AJAXFormDataCart",
+            "displayValue": "Form submit with form data encoding"
+          },
+          {
+            "value": "AJAXFormUrlEncodedCart",
+            "displayValue": "Form submit with url encoding"
+          },
+          {
+            "value": "RedirectCart",
+            "displayValue": "Simple URL call"
+          }
+        ],
+        "simpleValueType": true,
+        "enablingConditions": []
+      },
+      {
+        "type": "TEXT",
+        "name": "cartLabel",
+        "displayName": "\"Add to cart\" button text",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "none",
+            "type": "NOT_EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "cartUrl",
+        "displayName": "Add to cart URL",
+        "simpleValueType": true,
+        "help": "You can use {product} as placeholder for product ID.",
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "none",
+            "type": "NOT_EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "SELECT",
+        "name": "cartMethod",
+        "displayName": "Add to cart request method",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "GET",
+            "displayValue": "GET"
+          },
+          {
+            "value": "POST",
+            "displayValue": "POST"
+          }
+        ],
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXJSONCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormDataCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormUrlEncodedCart",
+            "type": "EQUALS"
+          }
+        ],
+        "defaultValue": "POST"
+      },
+      {
+        "type": "TEXT",
+        "name": "cartFinalUrl",
+        "displayName": "URL to redirect to after successfully adding an item to the shopping cart",
+        "simpleValueType": true,
+        "help": "You can use {product} as placeholder for product ID or {current} to use the complete current page URL (browser will refresh the page). If you define no URL, no redirect nor refresh will happen when an item is added to the shopping. cart.",
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "none",
+            "type": "NOT_EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "cartBody",
+        "displayName": "JSON definition that will be sent as body of the request",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXJSONCart",
+            "type": "EQUALS"
+          }
+        ],
+        "lineCount": 10,
+        "help": "You can use {product} as placeholder for product ID."
+      },
+      {
+        "type": "PARAM_TABLE",
+        "name": "cartParameters",
+        "displayName": "Request parameters",
+        "paramTableColumns": [
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "name",
+              "displayName": "Parameter name",
+              "simpleValueType": true
+            },
+            "isUnique": true
+          },
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "value",
+              "displayName": "Parameter value",
+              "simpleValueType": true,
+              "help": "You can use {product} as placeholder for product ID."
+            },
+            "isUnique": false
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormDataCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormUrlEncodedCart",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
   }
 ]
 
@@ -502,8 +677,11 @@ const getCookieValues = require('getCookieValues');
 const setCookie = require('setCookie');
 const generateRandom = require('generateRandom');
 const makeString = require('makeString');
+const makeTableMap = require('makeTableMap');
 
 const initWidget = () => {
+  const version = "2024060301";
+  
   const dataLayerPush = createQueue('dataLayer');
   const raventicLayerPush = createQueue('raventicLayer');
   
@@ -526,6 +704,9 @@ const initWidget = () => {
     dataLayerPush({
       event: "RaventicRCECarouselTest",
       raventic: {
+        recommendations: {
+          service: data.service
+        },
         raventic_variant: variant
       },
     });
@@ -535,6 +716,16 @@ const initWidget = () => {
       return;
     }
   }
+  
+  const cc = data.cartType == 'none' ? undefined : {
+        type: data.cartType,
+        urlPattern: data.cartUrl,
+        label: data.cartLabel,
+        method: data.cartMethod,
+        finalUrlPattern: data.cartFinalUrl,
+        bodyTemplate: data.cartBody,
+        parameters: data.cartParameters && data.cartParameters.length ? makeTableMap(data.cartParameters, 'name', 'value') : undefined,
+      };
   
   callInWindow(
     data.mode === "production" ? "RaventicRCECarousel.draw" : "RaventicRCECarouselDevel.draw", 
@@ -566,18 +757,35 @@ const initWidget = () => {
       customProductTemplate: data.customTemplates ? data.customProductTemplate : undefined,
       disableDefaultStyles: data.disableDefaultStyles,
       classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
+      cartConfig: cc,
     },
     data.productId,
-    (event, product, instanceId) => {
-      dataLayerPush({
-        event: "RaventicRCECarouselClick",
-        raventic: {
-          recommendations: {
-            instanceId: instanceId,
-            clickedProduct: product,
-          },
-         },
-      });
+    (event, product, instanceId, service, variant, action) => {
+      if (action == "add-to-cart") {
+        dataLayerPush({
+          event: "RaventicRCECarouselAddToCart",
+          raventic: {
+            recommendations: {
+              instanceId: instanceId,
+              clickedProduct: product,
+              service: service,
+              variant: variant
+            },
+           },
+        });        
+      } else {
+        dataLayerPush({
+          event: "RaventicRCECarouselClick",
+          raventic: {
+            recommendations: {
+              instanceId: instanceId,
+              clickedProduct: product,
+              service: service,
+              variant: variant
+            },
+           },
+        });
+      }
     },
     (stage, error, instanceId) => {
       logToConsole("Raventic Recommendation Carousel error:", stage, error);
@@ -600,6 +808,7 @@ const initWidget = () => {
         event: "RaventicRCECarouselStart",
         raventic: {
           recommendations: {
+            templateVersion: version,
             instanceId: instanceId,
             success: !error,
             reference: reference,
