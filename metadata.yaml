@@ -15,3 +15,5 @@ versions:
     changeNotes: Internal Raventic events do not pollute GTM data layer
   - sha: 6f9fdd15793951dd07def8e0f5c5aa44f0869c01
     changeNotes: Cross-sells support, configurable adding to cart support
+  - sha: f3744bcd126d87fc15aceb77535eb602af51babc
+    changeNotes: BC fix
