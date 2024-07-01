@@ -717,7 +717,7 @@ const initWidget = () => {
     }
   }
   
-  const cc = data.cartType == 'none' ? undefined : {
+  const cc = !data.cartType || data.cartType == 'none' ? undefined : {
         type: data.cartType,
         urlPattern: data.cartUrl,
         label: data.cartLabel,
