@@ -1,19 +1,19 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
-  - sha: 5254bc412899776e25ed52af3ac3739316a7724d
-    changeNotes: Initial version
-  - sha: 15470065ca80160912dc6de49bc03cd9e0d9db47
-    changeNotes: Fixed custom thumbnail sizes setting, template has logo
-  - sha: 965f9f63d9ad563fb2437eea31100909d56f38f0
-    changeNotes: New favicon, more flexible carousel placement options
-  - sha: 33eec04da865329dcbd790a1c72b60e25fcb0e20
-    changeNotes: A/B testing support, carousel size setting
-  - sha: fa0ae68ff21758938b78e602d7e83ff611fa2b4c
-    changeNotes: Fixed name for click event, new events for start, impression and error states
-  - sha: cf82e4a93eb6ea838bdd91ecd0e3bf80d9c51573
-    changeNotes: Internal Raventic events do not pollute GTM data layer
+  - sha: f3744bcd126d87fc15aceb77535eb602af51babc
+    changeNotes: BC fix in adding to cart functionality
   - sha: 6f9fdd15793951dd07def8e0f5c5aa44f0869c01
     changeNotes: Cross-sells support, configurable adding to cart support
-  - sha: f3744bcd126d87fc15aceb77535eb602af51babc
-    changeNotes: BC fix
+  - sha: cf82e4a93eb6ea838bdd91ecd0e3bf80d9c51573
+    changeNotes: Internal Raventic events do not pollute GTM data layer
+  - sha: fa0ae68ff21758938b78e602d7e83ff611fa2b4c
+    changeNotes: Fixed name for click event, new events for start, impression and error states
+  - sha: 33eec04da865329dcbd790a1c72b60e25fcb0e20
+    changeNotes: A/B testing support, carousel size setting
+  - sha: 965f9f63d9ad563fb2437eea31100909d56f38f0
+    changeNotes: New favicon, more flexible carousel placement options
+  - sha: 15470065ca80160912dc6de49bc03cd9e0d9db47
+    changeNotes: Fixed custom thumbnail sizes setting, template has logo
+  - sha: 5254bc412899776e25ed52af3ac3739316a7724d
+    changeNotes: Initial version
