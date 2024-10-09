@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: d03b1da7ecfd99c824a5b6ad592d3f1ff98ecd62
+    changeNotes: Support for custom styles, better handling of cart configuration
   - sha: be746b04d4fcd01c36334bae559db501e08cc2e7
     changeNotes: Support for "no action" shopping cart button - only fires an event
   - sha: f3744bcd126d87fc15aceb77535eb602af51babc
