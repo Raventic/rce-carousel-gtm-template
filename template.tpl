@@ -527,6 +527,10 @@ ___TEMPLATE_PARAMETERS___
           {
             "value": "RedirectCart",
             "displayValue": "Simple URL call"
+          },
+          {
+            "value": "NoActionCart",
+            "displayValue": "No explicit action, just fires an event"
           }
         ],
         "simpleValueType": true,
