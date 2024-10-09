@@ -558,8 +558,28 @@ ___TEMPLATE_PARAMETERS___
         "enablingConditions": [
           {
             "paramName": "cartType",
-            "paramValue": "none",
-            "type": "NOT_EQUALS"
+            "paramValue": "AJAXURLCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXJSONCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormDataCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormUrlEncodedCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "RedirectCart",
+            "type": "EQUALS"
           }
         ]
       },
@@ -607,8 +627,23 @@ ___TEMPLATE_PARAMETERS___
         "enablingConditions": [
           {
             "paramName": "cartType",
-            "paramValue": "none",
-            "type": "NOT_EQUALS"
+            "paramValue": "AJAXURLCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXJSONCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormDataCart",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "cartType",
+            "paramValue": "AJAXFormUrlEncodedCart",
+            "type": "EQUALS"
           }
         ]
       },
