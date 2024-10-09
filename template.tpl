@@ -469,6 +469,32 @@ ___TEMPLATE_PARAMETERS___
             "type": "EQUALS"
           }
         ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "customStyles",
+        "checkboxText": "Use custom styles",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "customStyle",
+        "displayName": "Custom CSS styles",
+        "simpleValueType": true,
+        "lineCount": 15,
+        "help": "You can provide custom CSS styles that will be injected into te site along with the carousel widget. This way you can make simple modifications to the carousel design or fix any side effects your site styles have on the carousel.",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "customStyles",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
       }
     ]
   },
@@ -797,6 +823,7 @@ const initWidget = () => {
       disableDefaultStyles: data.disableDefaultStyles,
       classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
       cartConfig: cc,
+      customStyles: data.customStyle ? data.customStyle : undefined
     },
     data.productId,
     (event, product, instanceId, service, variant, action) => {
