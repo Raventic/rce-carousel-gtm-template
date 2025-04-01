@@ -398,6 +398,14 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "type": "CHECKBOX",
+        "name": "doNotCropImages",
+        "checkboxText": "Do not crop images",
+        "simpleValueType": true,
+        "help": "By default images have their background cropped when creating thumbnails. Use this option to generate thumbnails from whole images incluing any single color background.",
+        "subParams": []
+      },
+      {
+        "type": "CHECKBOX",
         "name": "thumbnailCustomSize",
         "checkboxText": "Use custom image dimensions",
         "simpleValueType": true,
@@ -744,9 +752,9 @@ const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 
+const version = "20250401001";
+
 const initWidget = () => {
-  const version = "2024060301";
-  
   const dataLayerPush = createQueue('dataLayer');
   const raventicLayerPush = createQueue('raventicLayer');
   
@@ -814,6 +822,7 @@ const initWidget = () => {
         width: makeInteger(data.thumbnailWidth),
         height: makeInteger(data.thumbnailHeight),
       } : undefined,
+      doNotCropImages: !!data.doNotCropImages,
       inStockText: data.inStockText,
       prevTitle: data.prevTitle,
       nextTitle: data.nextTitle,
@@ -906,9 +915,9 @@ const initWidget = () => {
 };
 
 if (data.mode === "production") {
-  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.min.js", initWidget, data.gtmOnFailure);
+  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
 } else {
-  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.dev.min.js", initWidget, data.gtmOnFailure);
+  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
 }
 
 
@@ -1108,6 +1117,10 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "https://sdk.rvndn.com/rce/*/*.js"
+              },
+              {
+                "type": 1,
+                "string": "https://sdk.rvndn.com/rce/*/*.js?v\u003d*"
               }
             ]
           }
