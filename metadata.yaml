@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: b39bd062d1b8de56e6045400f7cf23ee01bd33e5
+    changeNotes: Option to have thumbnails not cropped
   - sha: d03b1da7ecfd99c824a5b6ad592d3f1ff98ecd62
     changeNotes: Support for custom styles, better handling of cart configuration
   - sha: be746b04d4fcd01c36334bae559db501e08cc2e7
