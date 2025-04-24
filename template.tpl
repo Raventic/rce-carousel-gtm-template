@@ -91,6 +91,14 @@ ___TEMPLATE_PARAMETERS___
           {
             "value": "cross-sell",
             "displayValue": "Cross sell"
+          },
+          {
+            "value": "seasonal-curated",
+            "displayValue": "Curated bestsellers"
+          },
+          {
+            "value": "category-seasonal-curated",
+            "displayValue": "Curated category bestsellers"
           }
         ],
         "simpleValueType": true,
@@ -202,7 +210,56 @@ ___TEMPLATE_PARAMETERS___
             "type": "NON_EMPTY"
           }
         ],
-        "alwaysInSummary": true
+        "alwaysInSummary": true,
+        "enablingConditions": [
+          {
+            "paramName": "service",
+            "paramValue": "visual-similarity",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "service",
+            "paramValue": "cross-sell",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "categoryId",
+        "displayName": "Category or product ID",
+        "simpleValueType": true,
+        "help": "Data layer variable with the category id product ID.",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "alwaysInSummary": true,
+        "enablingConditions": [
+          {
+            "paramName": "service",
+            "paramValue": "category-seasonal-curated",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "service",
+        "paramValue": "visual-similarity",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "service",
+        "paramValue": "cross-sell",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "service",
+        "paramValue": "category-seasonal-curated",
+        "type": "EQUALS"
       }
     ]
   },
@@ -752,7 +809,7 @@ const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 
-const version = "20250401001";
+const version = "20250424001";
 
 const initWidget = () => {
   const dataLayerPush = createQueue('dataLayer');
@@ -800,124 +857,186 @@ const initWidget = () => {
         parameters: data.cartParameters && data.cartParameters.length ? makeTableMap(data.cartParameters, 'name', 'value') : undefined,
       };
   
-  callInWindow(
-    data.mode === "production" ? "RaventicRCECarousel.draw" : "RaventicRCECarouselDevel.draw", 
-    {
-      apiKey: data.apiKey,
-      service: data.service
-    },
-    {
-      size: data.carouselSize,
-      targetContainerSelector: data.targetContainerSelector,
-      targetContainerMode: data.targetContainerMode,
-      defaultContainerId: data.defaultContainerId,
-      defaultContainerClass: data.defaultContainerClass,
-      defaultContainerStyles: data.defaultContainerStyles,
-      locale: data.locale,
-      title: data.title,
-      resultsCount: data.resultsCount,
-      currency: data.currency,
-      priceDecimals: data.priceDecimals !== undefined ? makeInteger(data.priceDecimals) : undefined,
-      thumbnailDimensions: data.thumbnailCustomSize && data.thumbnailWidth && data.thumbnailHeight ? {
-        width: makeInteger(data.thumbnailWidth),
-        height: makeInteger(data.thumbnailHeight),
-      } : undefined,
-      doNotCropImages: !!data.doNotCropImages,
-      inStockText: data.inStockText,
-      prevTitle: data.prevTitle,
-      nextTitle: data.nextTitle,
-      ratingDecimals: data.ratingDecimals !== undefined ? makeInteger(data.ratingDecimals) : undefined,
-      customTemplate: data.customTemplates ? data.customTemplate : undefined,
-      customProductTemplate: data.customTemplates ? data.customProductTemplate : undefined,
-      disableDefaultStyles: data.disableDefaultStyles,
-      classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
-      cartConfig: cc,
-      customStyles: data.customStyle ? data.customStyle : undefined
-    },
-    data.productId,
-    (event, product, instanceId, service, variant, action) => {
-      if (action == "add-to-cart") {
-        dataLayerPush({
-          event: "RaventicRCECarouselAddToCart",
-          raventic: {
-            recommendations: {
-              instanceId: instanceId,
-              clickedProduct: product,
-              service: service,
-              variant: variant
-            },
-           },
-        });        
-      } else {
-        dataLayerPush({
-          event: "RaventicRCECarouselClick",
-          raventic: {
-            recommendations: {
-              instanceId: instanceId,
-              clickedProduct: product,
-              service: service,
-              variant: variant
-            },
-           },
-        });
-      }
-    },
-    (stage, error, instanceId) => {
-      logToConsole("Raventic Recommendation Carousel error:", stage, error);
-      
-      raventicLayerPush({
-        event: "RaventicRCECarouselError",
+  const sdkConfig = {
+    apiKey: data.apiKey,
+    service: data.service
+  };
+  
+  const widgetConfig = {
+    size: data.carouselSize,
+    targetContainerSelector: data.targetContainerSelector,
+    targetContainerMode: data.targetContainerMode,
+    defaultContainerId: data.defaultContainerId,
+    defaultContainerClass: data.defaultContainerClass,
+    defaultContainerStyles: data.defaultContainerStyles,
+    locale: data.locale,
+    title: data.title,
+    resultsCount: data.resultsCount,
+    currency: data.currency,
+    priceDecimals: data.priceDecimals !== undefined ? makeInteger(data.priceDecimals) : undefined,
+    thumbnailDimensions: data.thumbnailCustomSize && data.thumbnailWidth && data.thumbnailHeight ? {
+      width: makeInteger(data.thumbnailWidth),
+      height: makeInteger(data.thumbnailHeight),
+    } : undefined,
+    doNotCropImages: !!data.doNotCropImages,
+    inStockText: data.inStockText,
+    prevTitle: data.prevTitle,
+    nextTitle: data.nextTitle,
+    ratingDecimals: data.ratingDecimals !== undefined ? makeInteger(data.ratingDecimals) : undefined,
+    customTemplate: data.customTemplates ? data.customTemplate : undefined,
+    customProductTemplate: data.customTemplates ? data.customProductTemplate : undefined,
+    disableDefaultStyles: data.disableDefaultStyles,
+    classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
+    cartConfig: cc,
+    customStyles: data.customStyle ? data.customStyle : undefined
+  };
+  
+  const onProductClick = (event, product, instanceId, service, variant, action) => {
+    if (action == "add-to-cart") {
+      dataLayerPush({
+        event: "RaventicRCECarouselAddToCart",
         raventic: {
           recommendations: {
             instanceId: instanceId,
-            error: {            
-              stage: stage,
-              error: error,
-            }
+            clickedProduct: product,
+            service: service,
+            variant: variant,
           },
-         },
-      });
-    },
-    (result, error, reference, instanceId) => {
-      raventicLayerPush({
-        event: "RaventicRCECarouselStart",
+        },
+      });        
+    } else {
+      dataLayerPush({
+        event: "RaventicRCECarouselClick",
         raventic: {
           recommendations: {
-            templateVersion: version,
             instanceId: instanceId,
-            success: !error,
-            reference: reference,
-            products: {
-              requested: data.resultsCount,
-              returned: result && result.products ? result.products.length : null,
-            },
-            error: error ? {stage: "execute", error: error} : null,
+            clickedProduct: product,
+            service: service,
+            variant: variant,
           },
-         },
-      });      
-    },
-    (visibleProductCount, instanceId) => {
-      raventicLayerPush({
-        event: "RaventicRCECarouselImpression",
-        raventic: {
-          recommendations: {
-            instanceId: instanceId,
-            products: {
-              visible: visibleProductCount,
-            },
-          }
-         },
+        },
       });
     }
-  );
+  };
+  
+  const onError = (stage, error, instanceId, service, variant) => {
+    logToConsole("Raventic Recommendation Carousel error:", stage, error);
+
+    raventicLayerPush({
+      event: "RaventicRCECarouselError",
+      raventic: {
+        recommendations: {
+          instanceId: instanceId,
+          error: {            
+            stage: stage,
+            error: error,
+          },
+          service: service,
+          variant: variant,
+        },
+      },
+    });
+  };
+
+  const onResult = (result, error, reference, instanceId, service, variant) => {
+    raventicLayerPush({
+      event: "RaventicRCECarouselStart",
+      raventic: {
+        recommendations: {
+          templateVersion: version,
+          instanceId: instanceId,
+          success: !error,
+          reference: reference,
+          products: {
+            requested: data.resultsCount,
+            returned: result && result.products ? result.products.length : null,
+          },
+          error: error ? {stage: "execute", error: error} : null,
+          service: service,
+          variant: variant,
+        },
+      },
+    });      
+  };
+  
+  const onImpression = (visibleProductCount, instanceId, service, variant) => {
+    raventicLayerPush({
+      event: "RaventicRCECarouselImpression",
+      raventic: {
+        recommendations: {
+          instanceId: instanceId,
+          products: {
+            visible: visibleProductCount,
+          },
+          service: service,
+          variant: variant,
+        }
+      },
+    });
+  };
+  
+  switch (data.service) {
+    case "visual-similarity":
+    case "cross-sell":
+      callInWindow(
+        data.mode === "production" ? "RaventicRCECarousel.draw" : "RaventicRCECarouselDevel.draw", 
+        sdkConfig,
+        widgetConfig,
+        data.productId,
+        onProductClick,
+        onError,
+        onResult,
+        onImpression,
+        (event) => {
+          raventicLayerPush(event);
+        }
+      );
+      break;
+      
+    case "seasonal-curated":
+      callInWindow(
+        data.mode === "production" ? "RaventicGlobalRCECarousel.draw" : "RaventicGlobalRCECarouselDevel.draw", 
+        sdkConfig,
+        widgetConfig,
+        onProductClick,
+        onError,
+        onResult,
+        onImpression,
+        (event) => {
+          raventicLayerPush(event);
+        }
+      );
+      break;
+      
+    case "category-seasonal-curated":
+      callInWindow(
+        data.mode === "production" ? "RaventicCategoryRCECarousel.draw" : "RaventicCategoryRCECarouselDevel.draw", 
+        sdkConfig,
+        widgetConfig,
+        data.categoryId,
+        onProductClick,
+        onError,
+        onResult,
+        onImpression,
+        (event) => {
+          raventicLayerPush(event);
+        }
+      );
+      break;
+      
+    default:
+      logToConsole("Raventic Recommendation Carousel error:", "Invalid carousel type", data.service);
+      data.gtmOnFailure();
+      return;
+  } 
   
   data.gtmOnSuccess();
 };
 
 if (data.mode === "production") {
-  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
 } else {
-  injectScript("https://sdk.rvndn.com/rce/v1/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
 }
 
 
@@ -1089,6 +1208,162 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "RaventicGlobalRCECarouselDevel.draw"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "RaventicCategoryRCECarouselDevel.draw"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "RaventicCategoryRCECarousel.draw"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "RaventicGlobalRCECarousel.draw"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
                   }
                 ]
               }
