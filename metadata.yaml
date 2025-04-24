@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: 5b9060fa85c5bcf65e619077977d6373e2167f10
+    changeNotes: New carousel types support
   - sha: b39bd062d1b8de56e6045400f7cf23ee01bd33e5
     changeNotes: Option to have thumbnails not cropped
   - sha: d03b1da7ecfd99c824a5b6ad592d3f1ff98ecd62
