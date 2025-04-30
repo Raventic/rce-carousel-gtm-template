@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: d3b756feff1264fe0a439ec3ae17d689a01cce13
+    changeNotes: CSP nonces support for optional custom styles
   - sha: 5b9060fa85c5bcf65e619077977d6373e2167f10
     changeNotes: New carousel types support
   - sha: b39bd062d1b8de56e6045400f7cf23ee01bd33e5
