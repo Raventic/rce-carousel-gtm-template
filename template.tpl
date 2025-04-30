@@ -104,6 +104,30 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "help": "Service type you want to use in the carousel.",
         "alwaysInSummary": true
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "csp",
+        "checkboxText": "The site uses Content Security Policy directives",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "cspNonce",
+        "displayName": "CSP nonce value",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "csp",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
       }
     ]
   },
@@ -888,7 +912,8 @@ const initWidget = () => {
     disableDefaultStyles: data.disableDefaultStyles,
     classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
     cartConfig: cc,
-    customStyles: data.customStyle ? data.customStyle : undefined
+    customStyles: data.customStyle ? data.customStyle : undefined,
+    cspNonce: data.cspNonce ? data.cspNonce : undefined,
   };
   
   const onProductClick = (event, product, instanceId, service, variant, action) => {
