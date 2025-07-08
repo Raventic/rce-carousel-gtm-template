@@ -353,6 +353,38 @@ ___TEMPLATE_PARAMETERS___
             "type": "NON_NEGATIVE_NUMBER"
           }
         ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "customPriceParameters",
+        "checkboxText": "Set custom product price parameter names",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "priceParameterName",
+        "displayName": "Product price parameter name",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customPriceParameters",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "salePriceParameterName",
+        "displayName": "Product sale price parameter name",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customPriceParameters",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
       }
     ]
   },
@@ -833,7 +865,7 @@ const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 
-const version = "20250424001";
+const version = "20250708001";
 
 const initWidget = () => {
   const dataLayerPush = createQueue('dataLayer');
@@ -914,6 +946,8 @@ const initWidget = () => {
     cartConfig: cc,
     customStyles: data.customStyle ? data.customStyle : undefined,
     cspNonce: data.cspNonce ? data.cspNonce : undefined,
+    priceParameterName: data.priceParameterName ? data.priceParameterName : undefined,
+    salePriceParameterName: data.salePriceParameterName ? data.salePriceParameterName : undefined,
   };
   
   const onProductClick = (event, product, instanceId, service, variant, action) => {
