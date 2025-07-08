@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: ab2c138d46ffd6d761af57bf7f4cdc98b4be9f8c
+    changeNotes: Configurable product price/sale price parameter names
   - sha: d3b756feff1264fe0a439ec3ae17d689a01cce13
     changeNotes: CSP nonces support for optional custom styles
   - sha: 5b9060fa85c5bcf65e619077977d6373e2167f10
