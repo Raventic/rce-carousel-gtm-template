@@ -54,80 +54,141 @@ ___TEMPLATE_PARAMETERS___
     "help": "Integration level - you will be testing your integration in development mode. After you are done with testing and receive an API key for production you will switch to production mode."
   },
   {
-    "type": "GROUP",
-    "name": "basic",
-    "displayName": "Basics",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
+    "type": "SELECT",
+    "name": "version",
+    "displayName": "Widget version",
+    "macrosInSelect": false,
+    "selectItems": [
       {
-        "type": "TEXT",
-        "name": "apiKey",
-        "displayName": "API key",
-        "simpleValueType": true,
-        "help": "Application Key provided by Raventic.",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          },
-          {
-            "type": "STRING_LENGTH",
-            "args": [
-              31,
-              31
-            ]
-          }
+        "value": "v1",
+        "displayValue": "Original"
+      },
+      {
+        "value": "v2",
+        "displayValue": "V2"
+      },
+      {
+        "value": "v3",
+        "displayValue": "V3"
+      }
+    ],
+    "simpleValueType": true,
+    "help": "Widget version. If you haven\u0027t explicitly set a version, you are running on \"original\".",
+    "defaultValue": "v1",
+    "alwaysInSummary": true
+  },
+  {
+    "type": "TEXT",
+    "name": "apiKey",
+    "displayName": "API key",
+    "simpleValueType": true,
+    "help": "Application Key provided by Raventic.",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      },
+      {
+        "type": "STRING_LENGTH",
+        "args": [
+          31,
+          31
         ]
+      }
+    ]
+  },
+  {
+    "type": "SELECT",
+    "name": "service",
+    "displayName": "Service",
+    "macrosInSelect": false,
+    "selectItems": [
+      {
+        "value": "visual-similarity",
+        "displayValue": "Visual similarity"
       },
       {
-        "type": "SELECT",
-        "name": "service",
-        "displayName": "Service",
-        "macrosInSelect": false,
-        "selectItems": [
-          {
-            "value": "visual-similarity",
-            "displayValue": "Visual similarity"
-          },
-          {
-            "value": "cross-sell",
-            "displayValue": "Cross sell"
-          },
-          {
-            "value": "seasonal-curated",
-            "displayValue": "Curated bestsellers"
-          },
-          {
-            "value": "category-seasonal-curated",
-            "displayValue": "Curated category bestsellers"
-          }
-        ],
-        "simpleValueType": true,
-        "help": "Service type you want to use in the carousel.",
-        "alwaysInSummary": true
+        "value": "cross-sell",
+        "displayValue": "Cross sell"
       },
       {
-        "type": "CHECKBOX",
-        "name": "csp",
-        "checkboxText": "The site uses Content Security Policy directives",
-        "simpleValueType": true
+        "value": "seasonal-curated",
+        "displayValue": "Curated bestsellers"
       },
       {
-        "type": "TEXT",
-        "name": "cspNonce",
-        "displayName": "CSP nonce value",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "csp",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
+        "value": "category-seasonal-curated",
+        "displayValue": "Curated category bestsellers"
+      }
+    ],
+    "simpleValueType": true,
+    "help": "Service type you want to use in the carousel.",
+    "alwaysInSummary": true
+  },
+  {
+    "type": "TEXT",
+    "name": "productId",
+    "displayName": "Product ID",
+    "simpleValueType": true,
+    "help": "Data layer variable with the product ID.",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ],
+    "alwaysInSummary": true,
+    "enablingConditions": [
+      {
+        "paramName": "service",
+        "paramValue": "visual-similarity",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "service",
+        "paramValue": "cross-sell",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "categoryId",
+    "displayName": "Category or product ID",
+    "simpleValueType": true,
+    "help": "Data layer variable with the category id product ID.",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ],
+    "alwaysInSummary": true,
+    "enablingConditions": [
+      {
+        "paramName": "service",
+        "paramValue": "category-seasonal-curated",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "csp",
+    "checkboxText": "The site uses Content Security Policy directives",
+    "simpleValueType": true
+  },
+  {
+    "type": "TEXT",
+    "name": "cspNonce",
+    "displayName": "CSP nonce value",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "csp",
+        "paramValue": true,
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
       }
     ]
   },
@@ -218,118 +279,16 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "GROUP",
-    "name": "dataLayer",
-    "displayName": "Data layer",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
+    "type": "TEXT",
+    "name": "locale",
+    "displayName": "Site locale",
+    "simpleValueType": true,
+    "valueValidators": [
       {
-        "type": "TEXT",
-        "name": "productId",
-        "displayName": "Product ID",
-        "simpleValueType": true,
-        "help": "Data layer variable with the product ID.",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "alwaysInSummary": true,
-        "enablingConditions": [
-          {
-            "paramName": "service",
-            "paramValue": "visual-similarity",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "service",
-            "paramValue": "cross-sell",
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "categoryId",
-        "displayName": "Category or product ID",
-        "simpleValueType": true,
-        "help": "Data layer variable with the category id product ID.",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "alwaysInSummary": true,
-        "enablingConditions": [
-          {
-            "paramName": "service",
-            "paramValue": "category-seasonal-curated",
-            "type": "EQUALS"
-          }
-        ]
+        "type": "NON_EMPTY"
       }
     ],
-    "enablingConditions": [
-      {
-        "paramName": "service",
-        "paramValue": "visual-similarity",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "service",
-        "paramValue": "cross-sell",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "service",
-        "paramValue": "category-seasonal-curated",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
-    "name": "visualRequired",
-    "displayName": "Visual",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
-      {
-        "type": "TEXT",
-        "name": "locale",
-        "displayName": "Site locale",
-        "simpleValueType": true,
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "help": "Your site locale (en-US, cs-CZ, etc.). Used to correctly format prices and decimal numbers. You will receive this value from Raventic."
-      },
-      {
-        "type": "TEXT",
-        "name": "title",
-        "displayName": "Carousel title",
-        "simpleValueType": true,
-        "help": "Header text that will be displayed above the carousel.",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "resultsCount",
-        "displayName": "Number of results to display in the carousel (1 - 50)",
-        "simpleValueType": true,
-        "valueValidators": [
-          {
-            "type": "POSITIVE_NUMBER"
-          }
-        ],
-        "defaultValue": 15
-      }
-    ]
+    "help": "Your site locale (en-US, cs-CZ, etc.). Used to correctly format prices and decimal numbers. You will receive this value from Raventic."
   },
   {
     "type": "GROUP",
@@ -396,10 +355,15 @@ ___TEMPLATE_PARAMETERS___
     "subParams": [
       {
         "type": "TEXT",
-        "name": "inStockText",
-        "displayName": "In stock label text",
+        "name": "title",
+        "displayName": "Carousel title",
         "simpleValueType": true,
-        "help": "This text will be displayed in a label when a product is in stock."
+        "help": "Header text that will be displayed above the carousel.",
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ]
       },
       {
         "type": "TEXT",
@@ -419,18 +383,410 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "GROUP",
-    "name": "visualRating",
-    "displayName": "User rating",
+    "name": "inStock",
+    "displayName": "In stock label support",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "inStockSupported",
+        "checkboxText": "Display in stock labels",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "inStockText",
+        "displayName": "In stock label text",
+        "simpleValueType": true,
+        "help": "This text will be displayed in a label when a product is in stock. If no text is provided, the label will be empty."
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "labels",
+    "displayName": "Labels",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "labelsPosition",
+        "displayName": "Default labels position in product card",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": "top-left",
+            "displayValue": "Top left"
+          },
+          {
+            "value": "top-right",
+            "displayValue": "Top right"
+          },
+          {
+            "value": "bottom-right",
+            "displayValue": "Bottom right"
+          },
+          {
+            "value": "bottom-left",
+            "displayValue": "Bottom left"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "top-left"
+      },
+      {
+        "type": "SELECT",
+        "name": "customLabelsPosition",
+        "displayName": "Custom labels position in product card",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": "top-left",
+            "displayValue": "Top left"
+          },
+          {
+            "value": "top-right",
+            "displayValue": "Top right"
+          },
+          {
+            "value": "bottom-right",
+            "displayValue": "Bottom right"
+          },
+          {
+            "value": "bottom-left",
+            "displayValue": "Bottom left"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "top-left",
+        "enablingConditions": [
+          {
+            "paramName": "version",
+            "paramValue": "v3",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "customLabelParameters",
+        "displayName": "Product parameter names to create custom labels",
+        "simpleValueType": true,
+        "textAsList": true,
+        "lineCount": 3
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "button",
+    "displayName": "Product card button",
     "groupStyle": "ZIPPY_CLOSED",
     "subParams": [
       {
         "type": "TEXT",
-        "name": "ratingDecimals",
-        "displayName": "Number of decimals in user rating (default 1)",
+        "name": "buttonTypeParameterName",
+        "displayName": "Product parameter that determines button type (target)",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "buttonLabelParameterName",
+        "displayName": "Product parameter that contains button text",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "buttonStyleParameterName",
+        "displayName": "Product parameter that determines button visual style",
+        "simpleValueType": true
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "defaultButtonToDetail",
+        "checkboxText": "Button leads to detail",
         "simpleValueType": true,
-        "valueValidators": [
+        "enablingConditions": [
           {
-            "type": "NON_NEGATIVE_NUMBER"
+            "paramName": "version",
+            "paramValue": "v3",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "GROUP",
+        "name": "cart",
+        "displayName": "Cart support",
+        "groupStyle": "ZIPPY_CLOSED",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "cartType",
+            "displayName": "Add to cart request type",
+            "macrosInSelect": false,
+            "selectItems": [
+              {
+                "value": "none",
+                "displayValue": "Adding to cart not supported"
+              },
+              {
+                "value": "AJAXURLCart",
+                "displayValue": "Generic AJAX call"
+              },
+              {
+                "value": "AJAXJSONCart",
+                "displayValue": "AJAX JSON call"
+              },
+              {
+                "value": "AJAXFormDataCart",
+                "displayValue": "Form submit with form data encoding"
+              },
+              {
+                "value": "AJAXFormUrlEncodedCart",
+                "displayValue": "Form submit with url encoding"
+              },
+              {
+                "value": "RedirectCart",
+                "displayValue": "Simple URL call"
+              },
+              {
+                "value": "NoActionCart",
+                "displayValue": "No explicit action, just fires an event"
+              }
+            ],
+            "simpleValueType": true,
+            "enablingConditions": []
+          },
+          {
+            "type": "TEXT",
+            "name": "cartUrl",
+            "displayName": "Add to cart URL",
+            "simpleValueType": true,
+            "help": "You can use {product} as placeholder for product ID.",
+            "enablingConditions": [
+              {
+                "paramName": "cartType",
+                "paramValue": "none",
+                "type": "NOT_EQUALS"
+              }
+            ]
+          },
+          {
+            "type": "SELECT",
+            "name": "cartMethod",
+            "displayName": "Add to cart request method",
+            "macrosInSelect": false,
+            "selectItems": [
+              {
+                "value": "GET",
+                "displayValue": "GET"
+              },
+              {
+                "value": "POST",
+                "displayValue": "POST"
+              }
+            ],
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXJSONCart",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXFormDataCart",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXFormUrlEncodedCart",
+                "type": "EQUALS"
+              }
+            ],
+            "defaultValue": "POST"
+          },
+          {
+            "type": "TEXT",
+            "name": "cartFinalUrl",
+            "displayName": "URL to redirect to after successfully adding an item to the shopping cart",
+            "simpleValueType": true,
+            "help": "You can use {product} as placeholder for product ID or {current} to use the complete current page URL (browser will refresh the page). If you define no URL, no redirect nor refresh will happen when an item is added to the shopping. cart.",
+            "enablingConditions": [
+              {
+                "paramName": "cartType",
+                "paramValue": "none",
+                "type": "NOT_EQUALS"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "name": "cartBody",
+            "displayName": "JSON definition that will be sent as body of the request",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXJSONCart",
+                "type": "EQUALS"
+              }
+            ],
+            "lineCount": 10,
+            "help": "You can use {product} as placeholder for product ID."
+          },
+          {
+            "type": "PARAM_TABLE",
+            "name": "cartParameters",
+            "displayName": "Request parameters",
+            "paramTableColumns": [
+              {
+                "param": {
+                  "type": "TEXT",
+                  "name": "name",
+                  "displayName": "Parameter name",
+                  "simpleValueType": true
+                },
+                "isUnique": true
+              },
+              {
+                "param": {
+                  "type": "TEXT",
+                  "name": "value",
+                  "displayName": "Parameter value",
+                  "simpleValueType": true,
+                  "help": "You can use {product} as placeholder for product ID."
+                },
+                "isUnique": false
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXFormDataCart",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "cartType",
+                "paramValue": "AJAXFormUrlEncodedCart",
+                "type": "EQUALS"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "cartLabel",
+        "displayName": "Button text",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "cartType",
+            "paramValue": "none",
+            "type": "NOT_EQUALS"
+          },
+          {
+            "paramName": "defaultButtonToDetail",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "additionalParameters",
+    "displayName": "Additional parameters in product card",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "PARAM_TABLE",
+        "name": "tableParameters",
+        "displayName": "Individual product parameters to display as a table in product card",
+        "paramTableColumns": [
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "parameterName",
+              "displayName": "Product parameter name",
+              "simpleValueType": true,
+              "valueValidators": [
+                {
+                  "type": "NON_EMPTY"
+                }
+              ]
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "title",
+              "displayName": "Displayed parameter title",
+              "simpleValueType": true,
+              "valueValidators": [
+                {
+                  "type": "NON_EMPTY"
+                }
+              ]
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "icon",
+              "displayName": "Optional icon URL",
+              "simpleValueType": true
+            },
+            "isUnique": false
+          }
+        ]
+      },
+      {
+        "type": "PARAM_TABLE",
+        "name": "individualParameters",
+        "displayName": "Individual product parameters to display in product card. These are intended to be styled manually.",
+        "paramTableColumns": [
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "parameterName",
+              "displayName": "Product parameter name",
+              "simpleValueType": true,
+              "valueValidators": [
+                {
+                  "type": "NON_EMPTY"
+                }
+              ]
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "title",
+              "displayName": "Displayed parameter title",
+              "simpleValueType": true,
+              "valueValidators": [
+                {
+                  "type": "NON_EMPTY"
+                }
+              ]
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "icon",
+              "displayName": "Optional icon URL",
+              "simpleValueType": true
+            },
+            "isUnique": false
           }
         ]
       }
@@ -449,6 +805,137 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "help": "Default style will not be loaded. You are expected to provide your own CSS styles as part of the page."
       },
+      {
+        "type": "TEXT",
+        "name": "customStyle",
+        "displayName": "Custom styles",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "disableDefaultStyles",
+            "paramValue": false,
+            "type": "EQUALS"
+          }
+        ],
+        "lineCount": 15
+      },
+      {
+        "type": "TEXT",
+        "name": "customPageStyles",
+        "displayName": "Custom page styles",
+        "simpleValueType": true,
+        "lineCount": 15,
+        "enablingConditions": [
+          {
+            "paramName": "version",
+            "paramValue": "v3",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "thumbnailCustomSize",
+        "checkboxText": "Set custom product image size (default is 350x350 px)",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "thumbnailHeight",
+        "displayName": "Height",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "thumbnailCustomSize",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueValidators": [
+          {
+            "type": "POSITIVE_NUMBER"
+          }
+        ],
+        "valueUnit": "px"
+      },
+      {
+        "type": "TEXT",
+        "name": "thumbnailWidth",
+        "displayName": "Width",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "thumbnailCustomSize",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueValidators": [
+          {
+            "type": "POSITIVE_NUMBER"
+          }
+        ],
+        "valueUnit": "px"
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "doNotCropImages",
+        "checkboxText": "Keep image background, do not crop",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "resultsCount",
+        "displayName": "Number of results to load",
+        "simpleValueType": true,
+        "valueValidators": [
+          {
+            "type": "POSITIVE_NUMBER"
+          }
+        ],
+        "defaultValue": 10
+      },
+      {
+        "type": "SELECT",
+        "name": "carouselSize",
+        "displayName": "Carousel size",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": "large",
+            "displayValue": "Large"
+          },
+          {
+            "value": "medium",
+            "displayValue": "Medium"
+          },
+          {
+            "value": "small",
+            "displayValue": "Small"
+          }
+        ],
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customTemplates",
+            "paramValue": false,
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "version",
+            "paramValue": "v3",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "styles_legacy",
+    "displayName": "Visual customization \u0026 styling 2",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
       {
         "type": "TEXT",
         "name": "classPrefix",
@@ -508,114 +995,18 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "help": "You can provide a Mustache template that will be used as a single product template."
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "version",
+        "paramValue": "v1",
+        "type": "EQUALS"
       },
       {
-        "type": "CHECKBOX",
-        "name": "doNotCropImages",
-        "checkboxText": "Do not crop images",
-        "simpleValueType": true,
-        "help": "By default images have their background cropped when creating thumbnails. Use this option to generate thumbnails from whole images incluing any single color background.",
-        "subParams": []
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "thumbnailCustomSize",
-        "checkboxText": "Use custom image dimensions",
-        "simpleValueType": true,
-        "help": "The default settings for displayed images are 350x350. If you want other exact dimensions, you can specify them.",
-        "subParams": []
-      },
-      {
-        "type": "TEXT",
-        "name": "thumbnailWidth",
-        "displayName": "Width",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "thumbnailCustomSize",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "POSITIVE_NUMBER"
-          }
-        ],
-        "valueUnit": "px"
-      },
-      {
-        "type": "TEXT",
-        "name": "thumbnailHeight",
-        "displayName": "Height",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "thumbnailCustomSize",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "POSITIVE_NUMBER"
-          }
-        ],
-        "valueUnit": "px"
-      },
-      {
-        "type": "SELECT",
-        "name": "carouselSize",
-        "displayName": "Carousel size",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "large",
-            "displayValue": "Large"
-          },
-          {
-            "value": "medium",
-            "displayValue": "Medium"
-          },
-          {
-            "value": "small",
-            "displayValue": "Small"
-          }
-        ],
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "customTemplates",
-            "paramValue": false,
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "customStyles",
-        "checkboxText": "Use custom styles",
-        "simpleValueType": true
-      },
-      {
-        "type": "TEXT",
-        "name": "customStyle",
-        "displayName": "Custom CSS styles",
-        "simpleValueType": true,
-        "lineCount": 15,
-        "help": "You can provide custom CSS styles that will be injected into te site along with the carousel widget. This way you can make simple modifications to the carousel design or fix any side effects your site styles have on the carousel.",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "customStyles",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ]
+        "paramName": "version",
+        "paramValue": "v2",
+        "type": "EQUALS"
       }
     ]
   },
@@ -638,216 +1029,6 @@ ___TEMPLATE_PARAMETERS___
         "alwaysInSummary": true
       }
     ]
-  },
-  {
-    "type": "GROUP",
-    "name": "cart",
-    "displayName": "Cart support",
-    "groupStyle": "ZIPPY_CLOSED",
-    "subParams": [
-      {
-        "type": "SELECT",
-        "name": "cartType",
-        "displayName": "Add to cart request type",
-        "macrosInSelect": false,
-        "selectItems": [
-          {
-            "value": "none",
-            "displayValue": "Adding to cart not supported"
-          },
-          {
-            "value": "AJAXURLCart",
-            "displayValue": "Generic AJAX call"
-          },
-          {
-            "value": "AJAXJSONCart",
-            "displayValue": "AJAX JSON call"
-          },
-          {
-            "value": "AJAXFormDataCart",
-            "displayValue": "Form submit with form data encoding"
-          },
-          {
-            "value": "AJAXFormUrlEncodedCart",
-            "displayValue": "Form submit with url encoding"
-          },
-          {
-            "value": "RedirectCart",
-            "displayValue": "Simple URL call"
-          },
-          {
-            "value": "NoActionCart",
-            "displayValue": "No explicit action, just fires an event"
-          }
-        ],
-        "simpleValueType": true,
-        "enablingConditions": []
-      },
-      {
-        "type": "TEXT",
-        "name": "cartLabel",
-        "displayName": "\"Add to cart\" button text",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "none",
-            "type": "NOT_EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "cartUrl",
-        "displayName": "Add to cart URL",
-        "simpleValueType": true,
-        "help": "You can use {product} as placeholder for product ID.",
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXURLCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXJSONCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormDataCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormUrlEncodedCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "RedirectCart",
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "SELECT",
-        "name": "cartMethod",
-        "displayName": "Add to cart request method",
-        "macrosInSelect": false,
-        "selectItems": [
-          {
-            "value": "GET",
-            "displayValue": "GET"
-          },
-          {
-            "value": "POST",
-            "displayValue": "POST"
-          }
-        ],
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXJSONCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormDataCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormUrlEncodedCart",
-            "type": "EQUALS"
-          }
-        ],
-        "defaultValue": "POST"
-      },
-      {
-        "type": "TEXT",
-        "name": "cartFinalUrl",
-        "displayName": "URL to redirect to after successfully adding an item to the shopping cart",
-        "simpleValueType": true,
-        "help": "You can use {product} as placeholder for product ID or {current} to use the complete current page URL (browser will refresh the page). If you define no URL, no redirect nor refresh will happen when an item is added to the shopping. cart.",
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXURLCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXJSONCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormDataCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormUrlEncodedCart",
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "cartBody",
-        "displayName": "JSON definition that will be sent as body of the request",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXJSONCart",
-            "type": "EQUALS"
-          }
-        ],
-        "lineCount": 10,
-        "help": "You can use {product} as placeholder for product ID."
-      },
-      {
-        "type": "PARAM_TABLE",
-        "name": "cartParameters",
-        "displayName": "Request parameters",
-        "paramTableColumns": [
-          {
-            "param": {
-              "type": "TEXT",
-              "name": "name",
-              "displayName": "Parameter name",
-              "simpleValueType": true
-            },
-            "isUnique": true
-          },
-          {
-            "param": {
-              "type": "TEXT",
-              "name": "value",
-              "displayName": "Parameter value",
-              "simpleValueType": true,
-              "help": "You can use {product} as placeholder for product ID."
-            },
-            "isUnique": false
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormDataCart",
-            "type": "EQUALS"
-          },
-          {
-            "paramName": "cartType",
-            "paramValue": "AJAXFormUrlEncodedCart",
-            "type": "EQUALS"
-          }
-        ]
-      }
-    ]
   }
 ]
 
@@ -865,7 +1046,7 @@ const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
 
-const version = "20250708001";
+const version = "20260107001";
 
 const initWidget = () => {
   const dataLayerPush = createQueue('dataLayer');
@@ -920,34 +1101,65 @@ const initWidget = () => {
   
   const widgetConfig = {
     size: data.carouselSize,
+    
+    locale: data.locale,
+    
+    currency: data.currency,
+    priceDecimals: data.priceDecimals !== undefined ? makeInteger(data.priceDecimals) : undefined,
+    
+    displayInStock: !!data.inStockSupported,
+    inStockText: data.inStockText,
+    
+    disableDefaultStyles: !!data.disableDefaultStyles,
+    customStyles: data.customStyle ? data.customStyle : undefined,
+    customPageStyles: data.customPageStyles ? data.customPageStyles : undefined,
+    
+    thumbnailDimensions: data.thumbnailCustomSize && data.thumbnailWidth && data.thumbnailHeight ? {
+      width: makeInteger(data.thumbnailWidth),
+      height: makeInteger(data.thumbnailHeight),
+    } : undefined,
+    doNotCropImages: data.doNotCropImages ? data.doNotCropImages : undefined,
+    
+    cartConfig: cc,
+    defaultButtonLabel: data.cartLabel ? data.cartLabel : undefined,
+    defaultButtonToDetail: data.defaultButtonToDetail ? data.defaultButtonToDetail : undefined,
+    
+    cspNonce: data.cspNonce ? data.cspNonce : undefined,
+    
+    labelsPosition: data.labelsPosition ? data.labelsPosition : undefined,
+    customLabelsPosition: data.customLabelsPosition ? data.customLabelsPosition : undefined,
+    
+    customLabelParameters: data.customLabelParameters && !!data.customLabelParameters.length ? data.customLabelParameters : undefined,
+      
+    buttonTypeParameterName: data.buttonTypeParameterName ? data.buttonTypeParameterName : undefined,
+    buttonLabelParameterName: data.buttonLabelParameterName ? data.buttonLabelParameterName : undefined,
+    buttonStyleParameterName: data.buttonStyleParameterName ? data.buttonStyleParameterName : undefined,
+      
+    tableParameters: data.tableParameters ? data.tableParameters : undefined,
+    individualParameters: data.individualParameters ? data.individualParameters : undefined,
+    
     targetContainerSelector: data.targetContainerSelector,
     targetContainerMode: data.targetContainerMode,
     defaultContainerId: data.defaultContainerId,
     defaultContainerClass: data.defaultContainerClass,
     defaultContainerStyles: data.defaultContainerStyles,
-    locale: data.locale,
+    
     title: data.title,
-    resultsCount: data.resultsCount,
-    currency: data.currency,
-    priceDecimals: data.priceDecimals !== undefined ? makeInteger(data.priceDecimals) : undefined,
-    thumbnailDimensions: data.thumbnailCustomSize && data.thumbnailWidth && data.thumbnailHeight ? {
-      width: makeInteger(data.thumbnailWidth),
-      height: makeInteger(data.thumbnailHeight),
-    } : undefined,
-    doNotCropImages: !!data.doNotCropImages,
-    inStockText: data.inStockText,
     prevTitle: data.prevTitle,
     nextTitle: data.nextTitle,
+    
+    resultsCount: data.resultsCount,
+    
     ratingDecimals: data.ratingDecimals !== undefined ? makeInteger(data.ratingDecimals) : undefined,
+    
     customTemplate: data.customTemplates ? data.customTemplate : undefined,
     customProductTemplate: data.customTemplates ? data.customProductTemplate : undefined,
-    disableDefaultStyles: data.disableDefaultStyles,
     classPrefix: data.disableDefaultStyles ? data.classPrefix : undefined,
-    cartConfig: cc,
-    customStyles: data.customStyle ? data.customStyle : undefined,
-    cspNonce: data.cspNonce ? data.cspNonce : undefined,
+        
     priceParameterName: data.priceParameterName ? data.priceParameterName : undefined,
     salePriceParameterName: data.salePriceParameterName ? data.salePriceParameterName : undefined,
+    
+    disableAnalyticsIntegration: true,
   };
   
   const onProductClick = (event, product, instanceId, service, variant, action) => {
@@ -1092,10 +1304,20 @@ const initWidget = () => {
   data.gtmOnSuccess();
 };
 
-if (data.mode === "production") {
-  injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
+const sdkVersion = data.version ? data.version : "v1";
+
+if (sdkVersion === "v3") {
+  if (data.mode === "production") {
+    injectScript("https://sdk.rvndn.com/rce2/v1/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  } else {
+    injectScript("https://sdk.rvndn.com/rce2/v1/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  }
 } else {
-  injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  if (data.mode === "production") {
+    injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  } else {
+    injectScript("https://sdk.rvndn.com/rce/v2/rvn-rce.dev.min.js?v=" + version, initWidget, data.gtmOnFailure);
+  }
 }
 
 
@@ -1455,6 +1677,14 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "https://sdk.rvndn.com/rce/*/*.js?v\u003d*"
+              },
+              {
+                "type": 1,
+                "string": "https://sdk.rvndn.com/rce2/*/*.js"
+              },
+              {
+                "type": 1,
+                "string": "https://sdk.rvndn.com/rce2/*/*.js?v\u003d*"
               }
             ]
           }
