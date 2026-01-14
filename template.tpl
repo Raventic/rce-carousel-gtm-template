@@ -927,86 +927,86 @@ ___TEMPLATE_PARAMETERS___
             "type": "EQUALS"
           }
         ]
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
-    "name": "styles_legacy",
-    "displayName": "Visual customization \u0026 styling 2",
-    "groupStyle": "ZIPPY_CLOSED",
-    "subParams": [
+      },
       {
-        "type": "TEXT",
-        "name": "classPrefix",
-        "displayName": "Prefix of HTML classes in the carousel",
-        "simpleValueType": true,
+        "type": "GROUP",
+        "name": "styles_legacy",
+        "displayName": "Visual customization \u0026 styling 2",
+        "groupStyle": "NO_ZIPPY",
+        "subParams": [
+          {
+            "type": "TEXT",
+            "name": "classPrefix",
+            "displayName": "Prefix of HTML classes in the carousel",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "disableDefaultStyles",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "help": "If case some HTML classes in the default carousel collide with classes in your page, you can use prefix them. In case you are using custom templates, this setting does not make sense."
+          },
+          {
+            "type": "CHECKBOX",
+            "name": "customTemplates",
+            "checkboxText": "Use custom templates",
+            "simpleValueType": true
+          },
+          {
+            "type": "TEXT",
+            "name": "customTemplate",
+            "displayName": "Custom carousel layout template",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "customTemplates",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "lineCount": 15,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "help": "You can provide a Mustache template that will be used as the crousel layout."
+          },
+          {
+            "type": "TEXT",
+            "name": "customProductTemplate",
+            "displayName": "Custom carousel product template",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "customTemplates",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "lineCount": 15,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "help": "You can provide a Mustache template that will be used as a single product template."
+          }
+        ],
         "enablingConditions": [
           {
-            "paramName": "disableDefaultStyles",
-            "paramValue": true,
+            "paramName": "version",
+            "paramValue": "v1",
+            "type": "EQUALS"
+          },
+          {
+            "paramName": "version",
+            "paramValue": "v2",
             "type": "EQUALS"
           }
-        ],
-        "help": "If case some HTML classes in the default carousel collide with classes in your page, you can use prefix them. In case you are using custom templates, this setting does not make sense."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "customTemplates",
-        "checkboxText": "Use custom templates",
-        "simpleValueType": true
-      },
-      {
-        "type": "TEXT",
-        "name": "customTemplate",
-        "displayName": "Custom carousel layout template",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "customTemplates",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "lineCount": 15,
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "help": "You can provide a Mustache template that will be used as the crousel layout."
-      },
-      {
-        "type": "TEXT",
-        "name": "customProductTemplate",
-        "displayName": "Custom carousel product template",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "customTemplates",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "lineCount": 15,
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "help": "You can provide a Mustache template that will be used as a single product template."
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "version",
-        "paramValue": "v1",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "version",
-        "paramValue": "v2",
-        "type": "EQUALS"
+        ]
       }
     ]
   },
