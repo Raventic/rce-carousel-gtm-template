@@ -1005,6 +1005,11 @@ ___TEMPLATE_PARAMETERS___
             "paramName": "version",
             "paramValue": "v2",
             "type": "EQUALS"
+          },
+          {
+            "paramName": "version",
+            "paramValue": "",
+            "type": "NOT_PRESENT"
           }
         ]
       }
