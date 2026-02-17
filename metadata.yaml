@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: 99300b6d8d78709737bdd5b99083011cfc56b6da
+    changeNotes: Better BC with versions before SDK versioning
   - sha: 52ab906a9d39e1c4750f81fb50cc5e246f71199d
     changeNotes: Better layout of visual settings
   - sha: 1ab148e90d78d544d56645f43050200344aaa4a2
