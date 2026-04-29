@@ -1047,6 +1047,7 @@ const makeInteger = require('makeInteger');
 const logToConsole = require('logToConsole');
 const getCookieValues = require('getCookieValues');
 const setCookie = require('setCookie');
+const localStorage = require('localStorage');
 const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
@@ -1058,18 +1059,28 @@ const initWidget = () => {
   const raventicLayerPush = createQueue('raventicLayer');
   
   if (data.testingMode) {
-    const v = getCookieValues("_rvn_ab");
+    const variantIdentifier = "_rvn_ab";
     
+    let v = localStorage.getItem(variantIdentifier);
+    if (v === null) {    
+      const cv = getCookieValues(variantIdentifier);
+      
+      if (cv && cv.length > 0) {
+        v = cv[0];
+      }
+    }
+
     let variant;
-    if (!v || v.length < 1) {
+    if (v === null) {
       variant = makeString(generateRandom(0, 1));
     } else {
-      variant = v[0];
+      variant = v;
     }
-    
-    setCookie("_rvn_ab", variant, {
+
+    localStorage.setItem(variantIdentifier, variant);
+    setCookie(variantIdentifier, variant, {
       domain: "auto",
-      path: "/", 
+      path: "/",
       "max-age": 365 * 86400
     });
     
@@ -1813,6 +1824,59 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "_rvn_ab"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_local_storage",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "keys",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "_rvn_ab"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
               }
             ]
           }
