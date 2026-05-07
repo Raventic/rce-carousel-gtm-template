@@ -1,6 +1,8 @@
 homepage: "https://www.raventic.com"
 documentation: "https://doc.raventic.dev/product-recommendations/"
 versions:
+  - sha: c8492370fadc7a8eb5c53a0154182f039fca2a55
+    changeNotes: Optionally dump widget configuration into console
   - sha: 7bdd65b5f45f00211ed264658d482b4ef38613e0
     changeNotes: A/B testing improvements
   - sha: 99300b6d8d78709737bdd5b99083011cfc56b6da
