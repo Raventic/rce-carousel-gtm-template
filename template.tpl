@@ -1051,6 +1051,7 @@ const localStorage = require('localStorage');
 const generateRandom = require('generateRandom');
 const makeString = require('makeString');
 const makeTableMap = require('makeTableMap');
+const JSON = require('JSON');
 
 const version = "20260107001";
 
@@ -1177,6 +1178,10 @@ const initWidget = () => {
     
     disableAnalyticsIntegration: true,
   };
+  
+  if (data.dumpConfig) {
+    logToConsole("Raventic Recommendation Carousel config:", JSON.stringify(widgetConfig));
+  }  
   
   const onProductClick = (event, product, instanceId, service, variant, action) => {
     if (action == "add-to-cart") {
