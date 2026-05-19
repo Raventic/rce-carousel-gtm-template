@@ -1034,6 +1034,20 @@ ___TEMPLATE_PARAMETERS___
         "alwaysInSummary": true
       }
     ]
+  },
+  {
+    "type": "GROUP",
+    "name": "debug",
+    "displayName": "Debug tools",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "dumpConfig",
+        "checkboxText": "Dump widget configurations into console",
+        "simpleValueType": true
+      }
+    ]
   }
 ]
 
