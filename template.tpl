@@ -1292,10 +1292,7 @@ const initWidget = () => {
         onProductClick,
         onError,
         onResult,
-        onImpression,
-        (event) => {
-          raventicLayerPush(event);
-        }
+        onImpression
       );
       break;
       
@@ -1307,10 +1304,7 @@ const initWidget = () => {
         onProductClick,
         onError,
         onResult,
-        onImpression,
-        (event) => {
-          raventicLayerPush(event);
-        }
+        onImpression
       );
       break;
       
@@ -1323,10 +1317,7 @@ const initWidget = () => {
         onProductClick,
         onError,
         onResult,
-        onImpression,
-        (event) => {
-          raventicLayerPush(event);
-        }
+        onImpression
       );
       break;
       
